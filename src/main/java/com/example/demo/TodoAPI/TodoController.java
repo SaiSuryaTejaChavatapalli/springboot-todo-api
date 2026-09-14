@@ -12,16 +12,22 @@ import java.util.Objects;
 @RequestMapping("/api/v1/todos")
 public class TodoController {
 
+    // composition: instance of other classes present in other class
+    private TodoService todoService;
+
     private final List<Todo> todos = new ArrayList<>();
 
-    public TodoController() {
+    public TodoController(TodoService todoService) {
+        this.todoService=todoService;
         todos.add(new Todo(true, 1, "Write Blog", 123));
         todos.add(new Todo(false, 2, "Do exercise", 345));
     }
 
-
     @GetMapping
-    public ResponseEntity<List<Todo>> getTodos() {
+    @TimeMonitor
+    public ResponseEntity<List<Todo>> getTodos(@RequestParam(required = false, defaultValue = "false" ) Boolean isCompleted) throws InterruptedException {
+        System.out.println("isCompleted:"+isCompleted);
+        // Thread.sleep(2000);
         return ResponseEntity.ok(todos);
     }
 
